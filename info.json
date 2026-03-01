@@ -1,0 +1,10 @@
+{
+  "name": "advanced-pumpjacks",
+  "version": "1.0.0",
+  "title": "Advanced Pumpjacks",
+  "description": "Adds advanced pumpjacks that can extract more resources from oil fields.",
+  "author": "Appalings03",
+  "homepage": "",
+  "factorio_version": "2.0",
+  "dependencies": ["base >= 2.0"]
+}
