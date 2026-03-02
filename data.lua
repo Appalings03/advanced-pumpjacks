@@ -4,10 +4,10 @@ local base_pumpjack = data.raw["mining-drill"]["pumpjack"]
 local base_item = data.raw["item"]["pumpjack"]
 local base_recipe = data.raw["recipe"]["pumpjack"]
 
-local function percent_energy_reduction(base_energy, percent)
+local function percent_energy_increase(base_energy, percent)
   local value, unit = string.match(base_energy, "([%d%.]+)(%a+)")
   value = tonumber(value)
-  value = value * (1 - percent)
+  value = value * (1 + percent)
   return tostring(value) .. unit
 end
 
@@ -26,7 +26,7 @@ for i = 1, tier_count do
   entity.name = name
   entity.minable.result = name
   entity.mining_speed = base_pumpjack.mining_speed * speed_bonus
-  entity.energy_usage = percent_energy_reduction(base_pumpjack.energy_usage, energy_reduction)
+  entity.energy_usage = percent_energy_increase(base_pumpjack.energy_usage, energy_reduction)
 
   ----------------------------------------
   -- ITEM
@@ -83,4 +83,5 @@ for i = 1, tier_count do
   ----------------------------------------
 
   data:extend({entity, item, recipe, tech})
+
 end
