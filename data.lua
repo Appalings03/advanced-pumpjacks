@@ -11,6 +11,33 @@ local function percent_energy_increase(base_energy, percent)
   return tostring(value) .. unit
 end
 
+-- Function to apply a tint to all layers of an animation or picture
+local function tint_entity_layers(animation, tint)
+    if not animation then return end
+    if animation.layers then
+        for _, layer in pairs(animation.layers) do
+            if not layer.draw_as_shadow then
+                layer.tint = tint
+            end
+        end
+    else
+        if not animation.draw_as_shadow then
+            animation.tint = tint
+        end
+    end
+end
+
+-- Function to get a gradient tint from green (base) to red (max tier)
+local function get_tier_tint(tier, max_tier)
+    local t = tier / max_tier
+    return {
+        r = 0.5 + (1.0 - 0.5) * t,   -- 0.5 -> 1.0
+        g = 1.0 - (1.0 - 0.0) * t,   -- 1.0 -> 0.0
+        b = 0.5 - (0.5 - 0.0) * t,   -- 0.5 -> 0.0
+        a = 1
+    }
+end
+
 for i = 1, tier_count do
   local tier = i + 1
   local name = "pumpjack-mk" .. tier
@@ -28,6 +55,14 @@ for i = 1, tier_count do
   entity.mining_speed = base_pumpjack.mining_speed * speed_bonus
   entity.energy_usage = percent_energy_increase(base_pumpjack.energy_usage, energy_reduction)
 
+  -- Apply the gradient tint
+    local tint = get_tier_tint(i, tier_count)
+    tint_entity_layers(entity.base_picture, tint)
+    tint_entity_layers(entity.animations.north, tint)
+    tint_entity_layers(entity.animations.east, tint)
+    tint_entity_layers(entity.animations.south, tint)
+    tint_entity_layers(entity.animations.west, tint)
+
   ----------------------------------------
   -- ITEM
   ----------------------------------------
@@ -35,6 +70,17 @@ for i = 1, tier_count do
   local item = table.deepcopy(base_item)
   item.name = name
   item.place_result = name
+
+  -- Layered icon: base icon + tinted overlay
+    item.icons = {
+        {icon = base_item.icon, icon_size = base_item.icon_size}, -- original
+        {
+            icon = base_item.icon,
+            icon_size = base_item.icon_size,
+            tint = tint
+        }
+    }
+    item.icon = nil -- remove single icon to prevent conflict
 
   ----------------------------------------
   -- RECIPE
@@ -57,8 +103,11 @@ for i = 1, tier_count do
   local tech = {
     type = "technology",
     name = name,
-    icon = base_pumpjack.icon,
     icon_size = base_pumpjack.icon_size,
+    icons = {
+        {icon = base_pumpjack.icon, icon_size = base_pumpjack.icon_size},
+        {icon = base_pumpjack.icon, icon_size = base_pumpjack.icon_size, tint = tint}
+    },
     prerequisites = i == 1 and {"oil-processing"} or {"pumpjack-mk" .. (tier - 1)},
     effects = {
       {
@@ -85,3 +134,4 @@ for i = 1, tier_count do
   data:extend({entity, item, recipe, tech})
 
 end
+
