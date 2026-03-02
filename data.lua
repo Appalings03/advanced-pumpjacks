@@ -56,12 +56,29 @@ for i = 1, tier_count do
   entity.energy_usage = percent_energy_increase(base_pumpjack.energy_usage, energy_reduction)
 
   -- Apply the gradient tint
-    local tint = get_tier_tint(i, tier_count)
-    tint_entity_layers(entity.base_picture, tint)
-    tint_entity_layers(entity.animations.north, tint)
-    tint_entity_layers(entity.animations.east, tint)
-    tint_entity_layers(entity.animations.south, tint)
-    tint_entity_layers(entity.animations.west, tint)
+  local tint = get_tier_tint(i, tier_count)
+  -- Apply tint to all relevant graphics of the entity
+  tint_entity_layers(entity.base_picture, tint)
+  
+  -- Old style (older Factorio)
+  if entity.animations then
+      tint_entity_layers(entity.animations.north, tint)
+      tint_entity_layers(entity.animations.east, tint)
+      tint_entity_layers(entity.animations.south, tint)
+      tint_entity_layers(entity.animations.west, tint)
+  end
+  
+  -- New style (Factorio 1.1+)
+  if entity.working_visualisations then
+      for _, vis in pairs(entity.working_visualisations) do
+          if vis.animation then
+              tint_entity_layers(vis.animation, tint)
+          end
+          if vis.hr_version and vis.hr_version.animation then
+              tint_entity_layers(vis.hr_version.animation, tint)
+          end
+      end
+  end
 
   ----------------------------------------
   -- ITEM
