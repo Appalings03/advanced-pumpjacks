@@ -1,3 +1,9 @@
+Version 1.1.0 [2026-03-02]
+Changes:
+Added tint for tiers color gradient
+Bugfixes:
+Renames thumbnail
+
 Version 1.0.1 [2026-03-02]
 Changes:
 Added the locale folder for the name/description
