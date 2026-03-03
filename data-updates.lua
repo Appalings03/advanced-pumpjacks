@@ -110,8 +110,9 @@ if mods["space-age"] then
             "cryogenic-science-pack"
         }
     end
-    add_productivity_bonus("pumpjack-mk3", 0.25)
-    add_productivity_bonus("pumpjack-mk4", 0.50)
+    -- doesn't work because add global prod
+    --add_productivity_bonus("pumpjack-mk3", 0.25)
+    --add_productivity_bonus("pumpjack-mk4", 0.50)
     log("Advanced Pumpjacks: Space Age tech tree adjusted.")
     --------------------------------------------------
     -- RECIPES
