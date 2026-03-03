@@ -1,4 +1,5 @@
 local requested_tiers = settings.startup["apj-tier-count"].value
+local modules_tiers = settings.startup["apj-tier-count"].value
 local max_allowed = 6
 
 if requested_tiers > max_allowed then
@@ -92,7 +93,9 @@ for i = 1, tier_count do
     entity.base_productivity = 0
   end
   entity.resource_searching_radius = base_pumpjack.resource_searching_radius
-  --entity.module_inventory_size = i + 2 -- exemple : tiers 1 → 3 slots, tiers 2 → 4 slots, etc.
+  if modules_tiers then
+    entity.module_inventory_size = i + 2 -- exemple : tiers 1 → 3 slots, tiers 2 → 4 slots, etc.
+  end
   entity.allowed_effects = {"speed", "productivity", "consumption", "pollution"}
   -- Apply the gradient tint
   local tint = get_tier_tint(i)
@@ -177,6 +180,7 @@ for i = 1, tier_count do
   data:extend({entity, item, recipe, tech})
 
 end
+
 
 
 
