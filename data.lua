@@ -1,13 +1,10 @@
 local requested_tiers = settings.startup["apj-tier-count"].value
-local is_space_age = mods["space-age"] ~= nil
-
 local max_allowed = 6
-if is_space_age then
-  max_allowed = 3
-end
+
 if requested_tiers > max_allowed then
-  log("Advanced Pumpjacks: Tier count clamped to " .. max_allowed .. " due to game mode.")
+  log("Advanced Pumpjacks: Tier count clamped to " .. max_allowed)
 end
+
 local tier_count = math.min(requested_tiers, max_allowed)
 
 local base_pumpjack = data.raw["mining-drill"]["pumpjack"]
@@ -95,104 +92,98 @@ end
 --------------------------------------------------
 
 
-if is_space_age then
-
-else
-  for i = 1, tier_count do
-    local tier = i + 1
-    local name = "pumpjack-mk" .. tier
+for i = 1, tier_count do
+  local tier = i + 1
+  local name = "pumpjack-mk" .. tier
   
-    local energy_reduction = 0.05 * i
-    local speed_bonus = 1 + (0.25 * i)
+  local energy_reduction = 0.05 * i
+  local speed_bonus = 1 + (0.25 * i)
   
-    ----------------------------------------
-    -- ENTITY
-    ----------------------------------------
+  ----------------------------------------
+  -- ENTITY
+  ----------------------------------------
   
-    local entity = table.deepcopy(base_pumpjack)
-    entity.name = name
-    entity.minable.result = name
-    entity.mining_speed = base_pumpjack.mining_speed * speed_bonus
-    entity.energy_usage = percent_energy_increase(base_pumpjack.energy_usage, energy_reduction)
+  local entity = table.deepcopy(base_pumpjack)
+  entity.name = name
+  entity.minable.result = name
+  entity.mining_speed = base_pumpjack.mining_speed * speed_bonus
+  entity.energy_usage = percent_energy_increase(base_pumpjack.energy_usage, energy_reduction)
   
-    -- Apply the gradient tint
-    local tint = get_tier_tint(i, tier_count)
-    -- Apply tint to all relevant graphics of the entity
-    tint_animation(entity.base_picture, tint)
-    
-    -- Apply tint to animation 
-    if entity.working_visualisations then
-      for _, vis in pairs(entity.working_visualisations) do
-          tint_animation(vis.animation, tint)
-      end
+  -- Apply the gradient tint
+  local tint = get_tier_tint(i, tier_count)
+  -- Apply tint to all relevant graphics of the entity
+  tint_animation(entity.base_picture, tint)
+  
+  -- Apply tint to animation 
+  if entity.working_visualisations then
+    for _, vis in pairs(entity.working_visualisations) do
+        tint_animation(vis.animation, tint)
     end
+  end
+
+----------------------------------------
+-- ITEM
+----------------------------------------
+
+  local item = table.deepcopy(base_item)
+  item.name = name
+  item.place_result = name
   
-    ----------------------------------------
-    -- ITEM
-    ----------------------------------------
-  
-    local item = table.deepcopy(base_item)
-    item.name = name
-    item.place_result = name
-  
-    -- Layered icon: base icon + tinted overlay
-      item.icons = {
-          {icon = base_item.icon, icon_size = base_item.icon_size}, -- original
-          {
-              icon = base_item.icon,
-              icon_size = base_item.icon_size,
-              tint = tint
-          }
-      }
-      item.icon = nil -- remove single icon to prevent conflict
-  
-    ----------------------------------------
-    -- RECIPE
-    ----------------------------------------
-  
-    local recipe = table.deepcopy(base_recipe)
-    recipe.name = name
-    recipe.results = {{type="item", name=name, amount=1}}
-  
-    recipe.ingredients = {
-      {type="item", name="pumpjack", amount=1},
-      {type="item", name="steel-plate", amount=5 * i},
-      {type="item", name="advanced-circuit", amount=3 * i}
-    }
-  
-    ----------------------------------------
-    -- TECHNOLOGY
-    ----------------------------------------
-  
-    local tech = {
-      type = "technology",
-      name = name,
-      icon_size = base_pumpjack.icon_size,
-      icons = {
-          {icon = base_pumpjack.icon, icon_size = base_pumpjack.icon_size},
-          {icon = base_pumpjack.icon, icon_size = base_pumpjack.icon_size, tint = tint}
-      },
-      prerequisites = i == 1 and {"oil-processing"} or {"pumpjack-mk" .. (tier - 1)},
-      effects = {
+  -- Layered icon: base icon + tinted overlay
+    item.icons = {
+        {icon = base_item.icon, icon_size = base_item.icon_size}, -- original
         {
-          type = "unlock-recipe",
-          recipe = name
+            icon = base_item.icon,
+            icon_size = base_item.icon_size,
+            tint = tint
         }
-      },
-      unit = {
-        count = 200 * i,
-        ingredients = {
-          {"automation-science-pack", 1},
-          {"logistic-science-pack", 1},
-          {"chemical-science-pack", 1}
-        },
-        time = 30
-      },
-      order = "d-a-" .. i
     }
-end
+    item.icon = nil -- remove single icon to prevent conflict
 
+----------------------------------------
+-- RECIPE
+----------------------------------------
 
+  local recipe = table.deepcopy(base_recipe)
+  recipe.name = name
+  recipe.results = {{type="item", name=name, amount=1}}
+  
+  recipe.ingredients = {
+    {type="item", name="pumpjack", amount=1},
+    {type="item", name="steel-plate", amount=5 * i},
+    {type="item", name="advanced-circuit", amount=3 * i}
+  }
+
+----------------------------------------
+-- TECHNOLOGY
+----------------------------------------
+
+  local tech = {
+    type = "technology",
+    name = name,
+    icon_size = base_pumpjack.icon_size,
+    icons = {
+        {icon = base_pumpjack.icon, icon_size = base_pumpjack.icon_size},
+        {icon = base_pumpjack.icon, icon_size = base_pumpjack.icon_size, tint = tint}
+    },
+    prerequisites = i == 1 and {"oil-processing"} or {"pumpjack-mk" .. (tier - 1)},
+    effects = {
+      {
+        type = "unlock-recipe",
+        recipe = name
+      }
+    },
+    unit = {
+      count = 200 * i,
+      ingredients = {
+        {"automation-science-pack", 1},
+        {"logistic-science-pack", 1},
+        {"chemical-science-pack", 1}
+      },
+      time = 30
+    },
+    order = "d-a-" .. i
+  }
 
   ----------------------------------------
   -- REGISTER
@@ -201,6 +192,7 @@ end
   data:extend({entity, item, recipe, tech})
 
 end
+
 
 
 
