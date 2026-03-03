@@ -16,13 +16,14 @@ data:extend({
   --------------------------------------------------
   -- SPACE AGE BALANCE MODE
   --------------------------------------------------
-  {
-    type = "bool-setting",
-    name = "apj-space-age-balance",
-    setting_type = "startup",
-    default_value = true,
-    order = "b",
-    hidden = not mods["space-age"]
-  }
+  --{
+  --  type = "bool-setting",
+  --  name = "apj-space-age-balance",
+  --  setting_type = "startup",
+  --  default_value = true,
+  --  order = "b",
+  --  hidden = not mods["space-age"]
+  --}
 })
+
 
