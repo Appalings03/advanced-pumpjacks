@@ -1,0 +1,33 @@
+---------------------------------------------------------------------------------------------------
+Version: 1.2.0
+Date: 03.03.2026
+  Changes:
+    - Added the hr_animation to the tint
+    - Reduce the maximum tier number from 20 to 6 for the Base Game and 3 for Space Age
+  Rework:
+    - Added a difference between Base Game and Space Age
+    - Science cost was changed
+  Bugfixes:
+    - Fixed the entity tint to easly spot the different Tiers 
+  
+---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+Date: 02.03.2026
+  Changes:
+    - Added tint for tiers color gradient
+  Bugfixes:
+    - Renames thumbnails to thumbnail
+
+---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 02.03.2026
+  Changes:
+    - Added the locale folder for the name/description
+    - Change the energy consumption from decrease to increase
+
+---------------------------------------------------------------------------------------------------
+Version: 1.0.0 
+Date: 01.03.2026
+  Changes:
+    - First commit
+---------------------------------------------------------------------------------------------------
