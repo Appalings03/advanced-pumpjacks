@@ -9,7 +9,7 @@ data:extend({
     setting_type = "startup",
     default_value = 3,
     minimum_value = 1,
-    maximum_value = 6,
+    maximum_value = 10,
     order = "a"
   },
 
@@ -25,3 +25,4 @@ data:extend({
     hidden = not mods["space-age"]
   }
 })
+
