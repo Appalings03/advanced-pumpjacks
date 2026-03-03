@@ -119,7 +119,7 @@ if mods["space-age"] then
     if data.raw.recipe["pumpjack-mk3"] then
         local foundry_recipe = table.deepcopy(data.raw.recipe["pumpjack-mk3"])
         foundry_recipe.name = "pumpjack-mk3-casting"
-        foundry_recipe.category = "casting"
+        foundry_recipe.category = "metallurgy"
         foundry_recipe.energy_required = 6 -- un peu plus rapide en foundry
 
         data:extend({foundry_recipe})
