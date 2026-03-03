@@ -34,6 +34,10 @@ if mods["space-age"] then
             },
             time = 30
         }
+        data.raw.technology["pumpjack-mk2"].prerequisites = {
+            "oil-processing",
+            "chemical-science-pack"
+        }
     end
     --------------------------------------------------
     -- MK3
@@ -51,6 +55,10 @@ if mods["space-age"] then
                 {"vulcanus-science-pack", 1}
             },
             time = 45
+        }
+        data.raw.technology["pumpjack-mk3"].prerequisites = {
+            "pumpjack-mk2",
+            "metallurgic-science-pack"
         }
     end
     --------------------------------------------------
@@ -70,6 +78,10 @@ if mods["space-age"] then
                 {"aquilo-science-pack", 1}
             },
             time = 60
+        }
+        data.raw.technology["pumpjack-mk4"].prerequisites = {
+            "pumpjack-mk3",
+            "cryogenic-science-pack"
         }
     end
     log("Advanced Pumpjacks: Space Age tech tree adjusted.")
