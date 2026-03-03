@@ -11,13 +11,6 @@ local base_pumpjack = data.raw["mining-drill"]["pumpjack"]
 local base_item = data.raw["item"]["pumpjack"]
 local base_recipe = data.raw["recipe"]["pumpjack"]
 
-local function percent_energy_increase(base_energy, percent)
-  local value, unit = string.match(base_energy, "([%d%.]+)(%a+)")
-  value = tonumber(value)
-  value = value * (1 + percent)
-  return tostring(value) .. unit
-end
-
 -- Function to apply a tint to all layers of an animation or picture
 local function tint_animation(animation, tint)
     if not animation then return end
@@ -86,11 +79,23 @@ for i = 1, tier_count do
   local entity = table.deepcopy(base_pumpjack)
   entity.name = name
   entity.minable.result = name
-  entity.mining_speed = base_pumpjack.mining_speed * speed_bonus
-  entity.energy_usage = percent_energy_increase(base_pumpjack.energy_usage, energy_reduction)
-  
+  entity.mining_speed = base_pumpjack.mining_speed * (1 + 0.25 * i)
+  local base_energy = string.match(base_pumpjack.energy_usage, "([%d%.]+)")
+  base_energy = tonumber(base_energy)
+  local new_energy = base_energy * math.pow(1.5, i)
+  new_energy = math.floor(new_energy / 10 + 0.5) * 10
+  entity.energy_usage = tostring(new_energy) .. "kW"
+
+  if i >= 2 then
+    entity.base_productivity = 0.05 * (i - 1)
+  else
+    entity.base_productivity = 0
+  end
+  entity.resource_searching_radius = base_pumpjack.resource_searching_radius
+  --entity.module_inventory_size = i + 2 -- exemple : tiers 1 → 3 slots, tiers 2 → 4 slots, etc.
+  entity.allowed_effects = {"speed", "productivity", "consumption", "pollution"}
   -- Apply the gradient tint
-  local tint = get_tier_tint(i, tier_count)
+  local tint = get_tier_tint(i)
   -- Apply tint to all relevant graphics of the entity
   tint_animation(entity.base_picture, tint)
   
@@ -172,6 +177,7 @@ for i = 1, tier_count do
   data:extend({entity, item, recipe, tech})
 
 end
+
 
 
 
