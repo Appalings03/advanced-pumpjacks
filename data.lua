@@ -12,18 +12,32 @@ local function percent_energy_increase(base_energy, percent)
 end
 
 -- Function to apply a tint to all layers of an animation or picture
-local function tint_entity_layers(animation, tint)
+local function tint_animation(animation, tint)
     if not animation then return end
+
+    -- If animation uses layers, tint each layer
     if animation.layers then
         for _, layer in pairs(animation.layers) do
             if not layer.draw_as_shadow then
                 layer.tint = tint
             end
+
+            -- Handle hr_version inside layers
+            if layer.hr_version then
+                tint_animation(layer.hr_version, tint)
+            end
         end
-    else
-        if not animation.draw_as_shadow then
-            animation.tint = tint
-        end
+        return
+    end
+
+    -- No layers → direct sprite
+    if not animation.draw_as_shadow then
+        animation.tint = tint
+    end
+
+    -- Handle hr_version
+    if animation.hr_version then
+        tint_animation(animation.hr_version, tint)
     end
 end
 
@@ -58,26 +72,13 @@ for i = 1, tier_count do
   -- Apply the gradient tint
   local tint = get_tier_tint(i, tier_count)
   -- Apply tint to all relevant graphics of the entity
-  tint_entity_layers(entity.base_picture, tint)
+  tint_animation(entity.base_picture, tint)
   
-  -- Old style (older Factorio)
-  if entity.animations then
-      tint_entity_layers(entity.animations.north, tint)
-      tint_entity_layers(entity.animations.east, tint)
-      tint_entity_layers(entity.animations.south, tint)
-      tint_entity_layers(entity.animations.west, tint)
-  end
-  
-  -- New style (Factorio 1.1+)
+  -- Apply tint to animation 
   if entity.working_visualisations then
-      for _, vis in pairs(entity.working_visualisations) do
-          if vis.animation then
-              tint_entity_layers(vis.animation, tint)
-          end
-          if vis.hr_version and vis.hr_version.animation then
-              tint_entity_layers(vis.hr_version.animation, tint)
-          end
-      end
+    for _, vis in pairs(entity.working_visualisations) do
+        tint_animation(vis.animation, tint)
+    end
   end
 
   ----------------------------------------
@@ -151,4 +152,5 @@ for i = 1, tier_count do
   data:extend({entity, item, recipe, tech})
 
 end
+
 
