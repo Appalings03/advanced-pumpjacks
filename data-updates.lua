@@ -1,3 +1,30 @@
+local function add_unlock(tech_name, recipe_name)
+    local tech = data.raw.technology[tech_name]
+    if tech then
+        tech.effects = tech.effects or {}
+        for _, effect in pairs(tech.effects) do
+            if effect.type == "unlock-recipe" and effect.recipe == recipe_name then
+                return
+            end
+        end
+        table.insert(tech.effects, {
+            type = "unlock-recipe",
+            recipe = recipe_name
+        })
+    end
+end
+
+local function add_productivity_bonus(tech_name, value)
+    local tech = data.raw.technology[tech_name]
+    if tech then
+        tech.effects = tech.effects or {}
+        table.insert(tech.effects, {
+            type = "mining-drill-productivity-bonus",
+            modifier = value
+        })
+    end
+end
+
 if mods["space-age"] then
     --------------------------------------------------
     -- LIMIT TO MK2, MK3, MK4 ONLY
@@ -12,7 +39,6 @@ if mods["space-age"] then
                 data.raw.recipe[name].enabled = false
                 data.raw.recipe[name].hidden = true
             end
-
             if data.raw.technology[name] then
                 data.raw.technology[name].enabled = false
                 data.raw.technology[name].hidden = true
@@ -52,7 +78,7 @@ if mods["space-age"] then
                 {"chemical-science-pack", 1},
                 {"production-science-pack", 1},
                 {"utility-science-pack", 1},
-                {"vulcanus-science-pack", 1}
+                {"metallurgic-science-pack", 1}
             },
             time = 45
         }
@@ -74,8 +100,8 @@ if mods["space-age"] then
                 {"chemical-science-pack", 1},
                 {"production-science-pack", 1},
                 {"utility-science-pack", 1},
-                {"vulcanus-science-pack", 1},
-                {"aquilo-science-pack", 1}
+                {"metallurgic-science-pack", 1},
+                {"cryogenic-science-pack", 1}
             },
             time = 60
         }
@@ -84,71 +110,90 @@ if mods["space-age"] then
             "cryogenic-science-pack"
         }
     end
+    add_productivity_bonus("pumpjack-mk3", 0.25)
+    add_productivity_bonus("pumpjack-mk4", 0.50)
     log("Advanced Pumpjacks: Space Age tech tree adjusted.")
     --------------------------------------------------
-    -- MK2 RECIPE
+    -- RECIPES
     --------------------------------------------------
+    
+    -- MK2 (Assembler only)
     if data.raw.recipe["pumpjack-mk2"] then
-        data.raw.recipe["pumpjack-mk2"].ingredients = {
+        local r = data.raw.recipe["pumpjack-mk2"]
+    
+        r.enabled = false
+        r.category = "crafting"
+        r.energy_required = 5
+        r.ingredients = {
             {type="item", name="pumpjack", amount=2},
             {type="item", name="steel-plate", amount=20},
             {type="item", name="advanced-circuit", amount=5}
         }
-
-        data.raw.recipe["pumpjack-mk2"].category = "crafting"
-        data.raw.recipe["pumpjack-mk2"].energy_required = 5
+    
+        add_unlock("pumpjack-mk2", "pumpjack-mk2")
     end
-    --------------------------------------------------
-    -- MK3 RECIPE (Vulcanus tier)
+    
+    
     -- MK3 (Assembler version)
-    --------------------------------------------------
     if data.raw.recipe["pumpjack-mk3"] then
-        data.raw.recipe["pumpjack-mk3"].ingredients = {
+        local r = data.raw.recipe["pumpjack-mk3"]
+    
+        r.enabled = false
+        r.category = "crafting"
+        r.energy_required = 8
+        r.ingredients = {
             {type="item", name="pumpjack-mk2", amount=1},
             {type="item", name="tungsten-plate", amount=30},
             {type="item", name="advanced-circuit", amount=20},
             {type="item", name="electric-engine-unit", amount=10}
         }
-
-        data.raw.recipe["pumpjack-mk3"].category = "crafting"
-        data.raw.recipe["pumpjack-mk3"].energy_required = 8
+    
+        add_unlock("pumpjack-mk3", "pumpjack-mk3")
     end
-    --------------------------------------------------
-    -- MK3 (Foundry version - casting)
-    --------------------------------------------------
+    
+    -- MK3 (Foundry version)
     if data.raw.recipe["pumpjack-mk3"] then
-        local foundry_recipe = table.deepcopy(data.raw.recipe["pumpjack-mk3"])
-        foundry_recipe.name = "pumpjack-mk3-casting"
-        foundry_recipe.category = "metallurgy"
-        foundry_recipe.energy_required = 6 -- un peu plus rapide en foundry
-
-        data:extend({foundry_recipe})
+        local foundry = table.deepcopy(data.raw.recipe["pumpjack-mk3"])
+        foundry.name = "pumpjack-mk3-foundry"
+        foundry.category = "metallurgy"
+        foundry.energy_required = 6
+        foundry.enabled = false
+    
+        data:extend({foundry})
+    
+        add_unlock("pumpjack-mk3", "pumpjack-mk3-foundry")
     end
-    --------------------------------------------------
-    -- MK4 RECIPE (Aquilo tier)
+    
+    
     -- MK4 (Assembler version)
-    --------------------------------------------------
     if data.raw.recipe["pumpjack-mk4"] then
-        data.raw.recipe["pumpjack-mk4"].ingredients = {
+        local r = data.raw.recipe["pumpjack-mk4"]
+    
+        r.enabled = false
+        r.category = "crafting-with-fluid"
+        r.energy_required = 12
+        r.ingredients = {
             {type="item", name="pumpjack-mk3", amount=1},
             {type="item", name="processing-unit", amount=25},
             {type="item", name="low-density-structure", amount=20},
             {type="item", name="electric-engine-unit", amount=20},
             {type="fluid", name="fluoroketone-hot", amount=25}
         }
-        data.raw.recipe["pumpjack-mk4"].category = "crafting-with-fluid"
-        data.raw.recipe["pumpjack-mk4"].energy_required = 12
+    
+        add_unlock("pumpjack-mk4", "pumpjack-mk4")
     end
-    --------------------------------------------------
-    -- MK4 (Cryoplant version - cryogenic)
-    --------------------------------------------------
+    
+    -- MK4 (Cryogenic version)
     if data.raw.recipe["pumpjack-mk4"] then
-        local cryo_recipe = table.deepcopy(data.raw.recipe["pumpjack-mk4"])
-        cryo_recipe.name = "pumpjack-mk4-cryogenic"
-        cryo_recipe.category = "cryogenic"
-        cryo_recipe.energy_required = 9 
-
-        data:extend({cryo_recipe})
+        local cryo = table.deepcopy(data.raw.recipe["pumpjack-mk4"])
+        cryo.name = "pumpjack-mk4-cryogenic"
+        cryo.category = "cryogenics"
+        cryo.energy_required = 9
+        cryo.enabled = false
+    
+        data:extend({cryo})
+    
+        add_unlock("pumpjack-mk4", "pumpjack-mk4-cryogenic")
     end
     
     log("Advanced Pumpjacks: Space Age recipes upgraded.")
