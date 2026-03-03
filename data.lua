@@ -49,44 +49,24 @@ local function tint_animation(animation, tint)
 end
 
 -- Function to get a gradient tint
-local function hsl_to_rgb(h, s, l)
-    local c = (1 - math.abs(2 * l - 1)) * s
-    local x = c * (1 - math.abs((h / 60) % 2 - 1))
-    local m = l - c/2
-    local r, g, b = 0, 0, 0
+local function get_tier_tint(tier)
+    local colors = {
+        -- mk2
+        {r=0.1, g=0.4, b=1.0, a=1},   -- Bleu
+        -- mk3
+        {r=1.0, g=0.2, b=0.2, a=1},   -- Rouge
+        -- mk4
+        {r=0.1, g=0.9, b=0.9, a=1},   -- Cyan
+        -- mk5
+        {r=1.0, g=0.5, b=0.1, a=1},   -- Orange
+        -- mk6
+        {r=0.7, g=0.2, b=1.0, a=1},   -- Mauve  
+        -- mk7
+        {r=1.0, g=1.0, b=0.2, a=1},   -- Jaune
+    }
 
-    if h < 60 then r,g,b = c,x,0
-    elseif h < 120 then r,g,b = x,c,0
-    elseif h < 180 then r,g,b = 0,c,x
-    elseif h < 240 then r,g,b = 0,x,c
-    elseif h < 300 then r,g,b = x,0,c
-    else r,g,b = c,0,x end
-
-    return {
-    r = r + m,
-    g = g + m,
-    b = b + m,
-    a = 1
-  }
+    return colors[tier] or colors[1]
 end
-
-local function get_tier_tint(tier, max_tier)
-    local num_tints = 6  -
-    local h_start = 120 
-    local s = 1.0 
-    local l_start = 0.4 
-    local l_end = 0.7 
-
-    local index = math.floor((tier - 1) / max_tier * (num_tints - 1)) + 1
-    if index < 1 then index = 1 end
-    if index > num_tints then index = num_tints end
-
-    local hue = h_start + (index - 1) * 20   
-    local light = l_start + (l_end - l_start) * ((index - 1)/(num_tints - 1))
-
-    return hsl_to_rgb(hue, s, light)
-end
-
 --------------------------------------------------
 -- SPACE AGE BALANCE MODE
 --------------------------------------------------
@@ -192,6 +172,7 @@ for i = 1, tier_count do
   data:extend({entity, item, recipe, tech})
 
 end
+
 
 
 
