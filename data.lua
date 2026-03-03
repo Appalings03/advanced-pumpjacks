@@ -1,4 +1,12 @@
-local tier_count = settings.startup["apj-tier-count"].value
+local requested_tiers = settings.startup["apj-tier-count"].value
+local is_space_age = mods["space-age"] ~= nil
+
+local max_allowed = 6
+if is_space_age then
+  max_allowed = 3
+end
+
+local tier_count = math.min(requested_tiers, max_allowed)
 
 local base_pumpjack = data.raw["mining-drill"]["pumpjack"]
 local base_item = data.raw["item"]["pumpjack"]
@@ -152,5 +160,6 @@ for i = 1, tier_count do
   data:extend({entity, item, recipe, tech})
 
 end
+
 
 
