@@ -12,7 +12,14 @@ data:extend({
     maximum_value = 10,
     order = "a"
   },
-
+  {
+    type = "bool",
+    name ="apj-module-tier",
+    setting_type = "startup",
+    default_value = true,
+    order = "b"
+  }
+  
   --------------------------------------------------
   -- SPACE AGE BALANCE MODE
   --------------------------------------------------
@@ -24,6 +31,7 @@ data:extend({
   --  order = "b",
   --  hidden = not mods["space-age"]
   --}
-})
+  })
+
 
 
