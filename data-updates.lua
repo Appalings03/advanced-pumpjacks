@@ -242,7 +242,5 @@ if mods["space-age"] then
     end
 
     log("Advanced Pumpjacks: Space Age stats rebalanced.")
-    end
-
-    log("Advanced Pumpjacks: Space Age stats rebalanced.")
 end
+
