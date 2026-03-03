@@ -16,7 +16,7 @@ data:extend({
     type = "bool",
     name ="apj-module-tier",
     setting_type = "startup",
-    default_value = true,
+    default_value = false,
     order = "b"
   }
   
@@ -32,6 +32,7 @@ data:extend({
   --  hidden = not mods["space-age"]
   --}
   })
+
 
 
 
