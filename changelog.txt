@@ -4,9 +4,12 @@ Date: 03.03.2026
   Changes:
     - Added the hr_animation to the tint
     - Reduce the maximum tier number from 20 to 6 for the Base Game and 3 for Space Age
+    - Added sprites sheet to allow tint
   Rework:
     - Added a difference between Base Game and Space Age
+    - New recipe for Space Age
     - Science cost was changed
+    - Rescaling of science cost for Base Game Tier
   Bugfixes:
     - Fixed the entity tint to easly spot the different Tiers 
   
