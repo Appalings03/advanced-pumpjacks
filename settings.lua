@@ -13,7 +13,7 @@ data:extend({
     order = "a"
   },
   {
-    type = "bool",
+    type = "bool-setting",
     name ="apj-module-tier",
     setting_type = "startup",
     default_value = false,
