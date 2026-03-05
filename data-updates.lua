@@ -206,10 +206,7 @@ if mods["space-age"] then
         mk2.mining_speed = 1.5
         mk2.resource_searching_radius = 3.0
         mk2.energy_usage = "200kW"
-        mk2.module_specification = {
-            module_slots = 3,
-            module_info_icon_shift = {0, 0.8}
-        }
+        mk2.module_slots = 3
     end
     --------------------------------------------------
     -- MK3 STATS
@@ -219,11 +216,10 @@ if mods["space-age"] then
         mk3.mining_speed = 2.5
         mk3.resource_searching_radius = 4.0
         mk3.energy_usage = "350kW"
-        mk3.module_specification = {
-            module_slots = 4,
-            module_info_icon_shift = {0, 0.8}
+        mk3.module_slots = 4
+        mk3.effect_receiver = {
+            base_effect = {productivity = 0.25}
         }
-        mk3.base_productivity = 0.25
     end
     --------------------------------------------------
     -- MK4 STATS (Aquilo tier)
@@ -233,11 +229,10 @@ if mods["space-age"] then
         mk4.mining_speed = 4.0
         mk4.resource_searching_radius = 5.0
         mk4.energy_usage = "600kW"
-        mk4.module_specification = {
-            module_slots = 5,
-            module_info_icon_shift = {0, 0.8}
+        mk4.module_slots = 5
+        mk4.effect_receiver = {
+        base_effect = {productivity = 0.5}
         }
-        mk4.base_productivity = 0.5
         -- Drain Rate-> trying to set it to 150%
     end
 
