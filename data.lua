@@ -39,23 +39,43 @@ end
 --------------------------------------------------
 
 local function apply_pumpjack_sprites(entity, tier)
-
     local path = "__advanced-pumpjacks__/graphics/mk" .. tier .. "/"
 
+    -- Base picture
     if entity.base_picture and entity.base_picture.layers then
-        entity.base_picture.layers[1].filename = "__advanced-pumpjacks__/graphics/pumpjack-base.png"
-        entity.base_picture.layers[2].filename = "__advanced-pumpjacks__/graphics/pumpjack-base-shadow.png"
-    end
-
-    if entity.working_visualisations then
-        for _, vis in pairs(entity.working_visualisations) do
-            if vis.animation and vis.animation.layers then
-                vis.animation.layers[1].filename = path .. "horsehead_mk" .. tier .. ".png"
-                vis.animation.layers[2].filename = "__advanced-pumpjacks__/graphics/pumpjack-horsehead-shadow.png"
-            end
+        entity.base_picture.layers[1].filename = path .. "pumpjack-base.png"
+        entity.base_picture.layers[2].filename = path .. "pumpjack-base-shadow.png"
+        if entity.base_picture.layers[1].hr_version then
+            entity.base_picture.layers[1].hr_version.filename = path .. "hr-pumpjack-base.png"
+        end
+        if entity.base_picture.layers[2].hr_version then
+            entity.base_picture.layers[2].hr_version.filename = path .. "hr-pumpjack-base-shadow.png"
         end
     end
 
+    -- Working visualisations
+    if entity.working_visualisations then
+        for _, vis in pairs(entity.working_visualisations) do
+            if vis.animation then
+                local anim = vis.animation
+                if anim.layers then
+                    anim.layers[1].filename = path .. "horsehead_mk" .. tier .. ".png"
+                    anim.layers[2].filename = path .. "pumpjack-horsehead-shadow.png"
+                    if anim.layers[1].hr_version then
+                        anim.layers[1].hr_version.filename = path .. "hr-horsehead_mk" .. tier .. ".png"
+                    end
+                    if anim.layers[2].hr_version then
+                        anim.layers[2].hr_version.filename = path .. "hr-pumpjack-horsehead-shadow.png"
+                    end
+                else
+                    anim.filename = path .. "horsehead_mk" .. tier .. ".png"
+                    if anim.hr_version then
+                        anim.hr_version.filename = path .. "hr-horsehead_mk" .. tier .. ".png"
+                    end
+                end
+            end
+        end
+    end
 end
 
 --------------------------------------------------
@@ -63,7 +83,6 @@ end
 --------------------------------------------------
 
 for i = 1, tier_count do
-
     local tier = i + 1
     local name = "pumpjack-mk" .. tier
 
@@ -72,10 +91,8 @@ for i = 1, tier_count do
     ----------------------------------------
 
     local entity = table.deepcopy(base_pumpjack)
-
     entity.name = name
     entity.minable.result = name
-
     entity.fast_replaceable_group = "pumpjack"
 
     if i < tier_count then
@@ -88,9 +105,7 @@ for i = 1, tier_count do
     -- ENERGY
     local base_energy = tonumber(string.match(base_pumpjack.energy_usage,"([%d%.]+)"))
     local new_energy = base_energy * math.pow(1.5, i)
-
     new_energy = math.floor(new_energy / 10 + 0.5) * 10
-
     entity.energy_usage = tostring(new_energy) .. "kW"
     entity.resource_searching_radius = base_pumpjack.resource_searching_radius
 
@@ -99,12 +114,14 @@ for i = 1, tier_count do
         entity.module_slots = 2 + i
         entity.allowed_effects = {"speed","productivity","consumption","pollution"}
     end
+
     -- PRODUCTIVITY
     if i >= 1 then
-      entity.effect_receiver = {
-        base_effect = {productivity = 0.05}
-      }
+        entity.effect_receiver = {
+            base_effect = {productivity = 0.05}
+        }
     end
+
     -- APPLY CUSTOM GRAPHICS
     apply_pumpjack_sprites(entity, tier)
     entity.corpse = "remnants_mk" .. tier
@@ -114,21 +131,13 @@ for i = 1, tier_count do
     ----------------------------------------
 
     local item = table.deepcopy(base_item)
-
     item.name = name
     item.place_result = name
-
     local tint = get_tier_tint(i)
-
     item.icons = {
         {icon = base_item.icon, icon_size = base_item.icon_size},
-        {
-            icon = base_item.icon,
-            icon_size = base_item.icon_size,
-            tint = tint
-        }
+        {icon = base_item.icon, icon_size = base_item.icon_size, tint = tint}
     }
-
     item.icon = nil
 
     ----------------------------------------
@@ -136,10 +145,8 @@ for i = 1, tier_count do
     ----------------------------------------
 
     local recipe = table.deepcopy(base_recipe)
-
     recipe.name = name
     recipe.results = {{type="item", name=name, amount=1}}
-
     recipe.ingredients = {
         {type="item", name="pumpjack", amount=1},
         {type="item", name="steel-plate", amount=5 * i},
@@ -151,26 +158,15 @@ for i = 1, tier_count do
     ----------------------------------------
 
     local tech = {
-
         type = "technology",
         name = name,
-
         icon_size = base_pumpjack.icon_size,
-
         icons = {
             {icon = base_pumpjack.icon, icon_size = base_pumpjack.icon_size},
             {icon = base_pumpjack.icon, icon_size = base_pumpjack.icon_size, tint = tint}
         },
-
         prerequisites = i == 1 and {"oil-processing"} or {"pumpjack-mk"..(tier-1)},
-
-        effects = {
-            {
-                type = "unlock-recipe",
-                recipe = name
-            }
-        },
-
+        effects = {{type = "unlock-recipe", recipe = name}},
         unit = {
             count = 200 * i,
             ingredients = {
@@ -180,49 +176,44 @@ for i = 1, tier_count do
             },
             time = 30
         },
-
         order = "d-a-" .. i
     }
-  
+
+    ----------------------------------------
+    -- CORPSE
+    ----------------------------------------
+
     local corpse = {
-      type = "corpse",
-      name = "remnants_mk" .. tier,
-      selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
-      time_before_removed = 3600, -- 1 heure (en ticks)
-      final_render_layer = "remnants",
-      remove_on_tile_placement = false,
-      animation = {
-        filename = "__advanced-pumpjacks__/graphics/mk" .. tier .. "/remnants_mk" .. tier .. ".png",
-        line_length = 1,
-        width = 146,
-        height = 132,
-        frame_count = 1,
-        direction_count = 4,
-        shift = {0.8125, 0.5625},
-      --[[
-        hr_version = {
-          filename = "__base__/graphics/entity/pumpjack/remnants/hr-pumpjack-remnant.png",
-          line_length = 1,
-          width = 290,
-          height = 262,
-          frame_count = 1,
-          direction_count = 4,
-          shift = {0.8125, 0.5625},
-          scale = 0.5
+        type = "corpse",
+        name = "remnants_mk" .. tier,
+        selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
+        time_before_removed = 3600,
+        final_render_layer = "remnants",
+        remove_on_tile_placement = false,
+        animation = {
+            filename = "__advanced-pumpjacks__/graphics/mk" .. tier .. "/remnants_mk" .. tier .. ".png",
+            line_length = 1,
+            width = 146,
+            height = 132,
+            frame_count = 1,
+            direction_count = 4,
+            shift = {0.8125, 0.5625},
+            hr_version = {
+                filename = "__advanced-pumpjacks__/graphics/mk" .. tier .. "/hr-remnants_mk" .. tier .. ".png",
+                line_length = 1,
+                width = 292,
+                height = 264,
+                frame_count = 1,
+                direction_count = 4,
+                shift = {0.8125, 0.5625},
+                scale = 0.5
+            }
         }
-      --]]
-      }
     }
 
     ----------------------------------------
     -- REGISTER
     ----------------------------------------
 
-    data:extend({entity,item,recipe,tech,corpse})
-
+    data:extend({entity, item, recipe, tech, corpse})
 end
-
-
-
-
-
