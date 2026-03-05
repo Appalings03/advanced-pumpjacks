@@ -1,6 +1,11 @@
 local requested_tiers = settings.startup["apj-tier-count"].value
 local modules_tiers = settings.startup["apj-modules"].value
-
+if modules_tiers == nil then
+  modules_tiers = false
+end
+if requested_tiers == nil then
+  requested_tiers = 3
+end
 local max_allowed = 6
 
 if requested_tiers > max_allowed then
@@ -216,6 +221,7 @@ for i = 1, tier_count do
     data:extend({entity,item,recipe,tech,corpse})
 
 end
+
 
 
 
