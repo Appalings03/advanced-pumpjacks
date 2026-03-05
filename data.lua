@@ -17,6 +17,7 @@ local tier_count = math.min(requested_tiers, max_allowed)
 local base_pumpjack = data.raw["mining-drill"]["pumpjack"]
 local base_item = data.raw["item"]["pumpjack"]
 local base_recipe = data.raw["recipe"]["pumpjack"]
+local base_corpse = data.raw["remnants"]["pumpjack-remnants"]
 
 --------------------------------------------------
 -- COLOR FOR ITEMS ONLY
@@ -217,3 +218,4 @@ for i = 1, tier_count do
 
     data:extend({entity, item, recipe, tech, corpse})
 end
+
