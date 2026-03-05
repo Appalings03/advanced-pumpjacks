@@ -35,18 +35,18 @@ end
 
 local function apply_pumpjack_sprites(entity, tier)
 
-    local path = "__advanced-pumpjacks__/graphics/entity/pumpjack-mk" .. tier .. "/"
+    local path = "__advanced-pumpjacks__/graphics/mk" .. tier .. "/"
 
     if entity.base_picture and entity.base_picture.layers then
-        entity.base_picture.layers[1].filename = path .. "base.png"
-        entity.base_picture.layers[2].filename = path .. "base-shadow.png"
+        entity.base_picture.layers[1].filename = "__advanced-pumpjacks__/graphics/pumpjack-base.png"
+        entity.base_picture.layers[2].filename = "__advanced-pumpjacks__/graphics/pumpjack-base-shadow.png"
     end
 
     if entity.working_visualisations then
         for _, vis in pairs(entity.working_visualisations) do
             if vis.animation and vis.animation.layers then
-                vis.animation.layers[1].filename = path .. "horsehead.png"
-                vis.animation.layers[2].filename = path .. "horsehead-shadow.png"
+                vis.animation.layers[1].filename = path .. "horsehead_mk" .. tier .. ".png"
+                vis.animation.layers[2].filename = "__advanced-pumpjacks__/graphics/pumpjack-horsehead-shadow.png"
             end
         end
     end
@@ -185,3 +185,4 @@ for i = 1, tier_count do
     data:extend({entity,item,recipe,tech})
 
 end
+
