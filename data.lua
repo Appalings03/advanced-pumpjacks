@@ -102,6 +102,7 @@ for i = 1, tier_count do
     end
     -- APPLY CUSTOM GRAPHICS
     apply_pumpjack_sprites(entity, tier)
+    entity.corpse = "remnants_mk" .. tier
 
     ----------------------------------------
     -- ITEM
@@ -177,13 +178,44 @@ for i = 1, tier_count do
 
         order = "d-a-" .. i
     }
+  
+    local corpse = {
+      type = "corpse",
+      name = "remnants_mk" .. tier,
+      selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
+      time_before_removed = 3600, -- 1 heure (en ticks)
+      final_render_layer = "remnants",
+      remove_on_tile_placement = false,
+      animation = {
+        filename = "__advanced-pumpjacks__/graphics/mk" .. tier .. "/remnants_mk" .. tier .. ".png",
+        line_length = 1,
+        width = 146,
+        height = 132,
+        frame_count = 1,
+        direction_count = 4,
+        shift = {0.8125, 0.5625},
+      --[[
+        hr_version = {
+          filename = "__base__/graphics/entity/pumpjack/remnants/hr-pumpjack-remnant.png",
+          line_length = 1,
+          width = 290,
+          height = 262,
+          frame_count = 1,
+          direction_count = 4,
+          shift = {0.8125, 0.5625},
+          scale = 0.5
+        }
+      --]]
+      }
+    }
 
     ----------------------------------------
     -- REGISTER
     ----------------------------------------
 
-    data:extend({entity,item,recipe,tech})
+    data:extend({entity,item,recipe,tech,corpse})
 
 end
+
 
 
