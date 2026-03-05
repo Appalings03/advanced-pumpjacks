@@ -96,7 +96,7 @@ for i = 1, tier_count do
 
     -- MODULES
     if modules_tiers then
-        entity.module_specification = { module_slots = 2 + i }
+        entity.module_slots = 2 + i
         entity.allowed_effects = {"speed","productivity","consumption","pollution"}
     end
     -- PRODUCTIVITY
@@ -221,6 +221,7 @@ for i = 1, tier_count do
     data:extend({entity,item,recipe,tech,corpse})
 
 end
+
 
 
 
