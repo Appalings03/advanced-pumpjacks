@@ -223,7 +223,9 @@ if mods["space-age"] then
             module_slots = 4,
             module_info_icon_shift = {0, 0.8}
         }
-        mk3.base_productivity = 0.25
+        mk3.effect_receiver = {
+            base_effect = {productivity = 0.25}
+        }
     end
     --------------------------------------------------
     -- MK4 STATS (Aquilo tier)
@@ -237,7 +239,9 @@ if mods["space-age"] then
             module_slots = 5,
             module_info_icon_shift = {0, 0.8}
         }
-        mk4.base_productivity = 0.5
+        mk4.effect_receiver = {
+        base_effect = {productivity = 0.5}
+        }
         -- Drain Rate-> trying to set it to 150%
     end
 
