@@ -1,3 +1,4 @@
+local util = require("util")
 local requested_tiers = settings.startup["apj-tier-count"].value
 local modules_tiers = settings.startup["apj-modules"].value
 if modules_tiers == nil then
@@ -46,12 +47,14 @@ local function apply_pumpjack_sprites(entity, tier)
     if entity.base_picture and entity.base_picture.layers then
         entity.base_picture.layers[1].filename = path .. "pumpjack-base.png"
         entity.base_picture.layers[2].filename = path .. "pumpjack-base-shadow.png"
+        --[[
         if entity.base_picture.layers[1].hr_version then
             entity.base_picture.layers[1].hr_version.filename = path .. "hr-pumpjack-base.png"
         end
         if entity.base_picture.layers[2].hr_version then
             entity.base_picture.layers[2].hr_version.filename = path .. "hr-pumpjack-base-shadow.png"
         end
+        --]]
     end
 
     -- Working visualisations
@@ -62,17 +65,21 @@ local function apply_pumpjack_sprites(entity, tier)
                 if anim.layers then
                     anim.layers[1].filename = path .. "horsehead_mk" .. tier .. ".png"
                     anim.layers[2].filename = path .. "pumpjack-horsehead-shadow.png"
+                    --[[
                     if anim.layers[1].hr_version then
                         anim.layers[1].hr_version.filename = path .. "hr-horsehead_mk" .. tier .. ".png"
                     end
                     if anim.layers[2].hr_version then
                         anim.layers[2].hr_version.filename = path .. "hr-pumpjack-horsehead-shadow.png"
                     end
+                    --]]
                 else
                     anim.filename = path .. "horsehead_mk" .. tier .. ".png"
+                    --[[
                     if anim.hr_version then
                         anim.hr_version.filename = path .. "hr-horsehead_mk" .. tier .. ".png"
                     end
+                    --]]
                 end
             end
         end
@@ -187,18 +194,29 @@ for i = 1, tier_count do
     local corpse = {
         type = "corpse",
         name = "remnants_mk" .. tier,
+        --icon =""
+        flags = {"placeable-neutral", "building-direction-8-way", "not-on-map"},
+        hidden_in_factoriopedia = true,
+        subgroup = "extraction-machine-remnants",
+        order = "a-d-a",
         selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
-        time_before_removed = 3600,
+        tile_width = 3,
+        tile_height = 3,
+        selectable_in_game = false,
+        time_before_removed = 60 * 60 * 15,
+        expires = false,
         final_render_layer = "remnants",
         remove_on_tile_placement = false,
         animation = {
             filename = "__advanced-pumpjacks__/graphics/mk" .. tier .. "/remnants_mk" .. tier .. ".png",
             line_length = 1,
-            width = 146,
-            height = 132,
-            frame_count = 1,
-            direction_count = 4,
-            shift = {0.8125, 0.5625},
+            width = 274,
+            height = 284,
+            direction_count = 1,
+            shift = util.by_pixel(0, 3.5)
+            scale = 0.5
+            --HR not supported yet
+            --[[
             hr_version = {
                 filename = "__advanced-pumpjacks__/graphics/mk" .. tier .. "/hr-remnants_mk" .. tier .. ".png",
                 line_length = 1,
@@ -209,6 +227,7 @@ for i = 1, tier_count do
                 shift = {0.8125, 0.5625},
                 scale = 0.5
             }
+          --]]
         }
     }
 
@@ -218,4 +237,5 @@ for i = 1, tier_count do
 
     data:extend({entity, item, recipe, tech, corpse})
 end
+
 
