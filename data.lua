@@ -97,7 +97,7 @@ for i = 1, tier_count do
     -- PRODUCTIVITY
     if i >= 1 then
       entity.effect_receiver = {
-        base_effect = {productivity = 0.5}
+        base_effect = {productivity = 0.05}
       }
     end
     -- APPLY CUSTOM GRAPHICS
@@ -185,4 +185,5 @@ for i = 1, tier_count do
     data:extend({entity,item,recipe,tech})
 
 end
+
 
