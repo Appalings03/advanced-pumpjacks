@@ -2,7 +2,7 @@
 Version: 1.2.1
 Date: 05.0.3.2026
   Changes:
-    - Added custom spritesheet
+    - Added custom spritesheet (I still cannot figure why it doesn't work)
     - Added base productivity for the tier
 
 ---------------------------------------------------------------------------------------------------
