@@ -191,7 +191,11 @@ for i = 1, tier_count do
     local corpse = table.deepcopy(base_corpse)
     corpse.name = "remnants_mk" .. tier
     corpse.icons = item.icons
-    corpse.animation.tint = tint
+    for _, anim in pairs(corpse.animation) do
+        if type(anim) == "table" then
+            anim.tint = tint
+        end
+    end
     log("Advanced Pumpjacks: corpse prototype [remnants_mk" .. tier .. "]:")
     log(serpent.block(corpse))
 
@@ -201,4 +205,5 @@ for i = 1, tier_count do
 
     data:extend({entity, item, recipe, tech, corpse})
 end
+
 
