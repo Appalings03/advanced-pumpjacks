@@ -18,7 +18,7 @@ local tier_count = math.min(requested_tiers, max_allowed)
 local base_pumpjack = data.raw["mining-drill"]["pumpjack"]
 local base_item = data.raw["item"]["pumpjack"]
 local base_recipe = data.raw["recipe"]["pumpjack"]
-local base_corpse = data.raw["remnants"]["pumpjack-remnants"]
+--local base_corpse = data.raw["remnants"]["pumpjack-remnants"]
 
 --------------------------------------------------
 -- COLOR FOR ITEMS ONLY
@@ -38,48 +38,99 @@ end
 
 --------------------------------------------------
 -- APPLY CUSTOM SPRITES
+-- FIX: Factorio 2.x utilise graphics_set au lieu de
+--      base_picture + working_visualisations directement
 --------------------------------------------------
 
 local function apply_pumpjack_sprites(entity, tier)
     local path = "__advanced-pumpjacks__/graphics/mk" .. tier .. "/"
 
-    -- Base picture
-    if entity.base_picture and entity.base_picture.layers then
-        entity.base_picture.layers[1].filename = path .. "pumpjack-base.png"
-        entity.base_picture.layers[2].filename = path .. "pumpjack-base-shadow.png"
-        --[[
-        if entity.base_picture.layers[1].hr_version then
-            entity.base_picture.layers[1].hr_version.filename = path .. "hr-pumpjack-base.png"
-        end
-        if entity.base_picture.layers[2].hr_version then
-            entity.base_picture.layers[2].hr_version.filename = path .. "hr-pumpjack-base-shadow.png"
-        end
-        --]]
-    end
+    log("Advanced Pumpjacks [apply_pumpjack_sprites] tier=" .. tier)
+    log("  graphics_set exists: " .. tostring(entity.graphics_set ~= nil))
+    log("  base_picture exists: " .. tostring(entity.base_picture ~= nil))
+    log("  working_visualisations exists: " .. tostring(entity.working_visualisations ~= nil))
 
-    -- Working visualisations
-    if entity.working_visualisations then
-        for _, vis in pairs(entity.working_visualisations) do
-            if vis.animation then
-                local anim = vis.animation
-                if anim.layers then
-                    anim.layers[1].filename = path .. "horsehead_mk" .. tier .. ".png"
-                    anim.layers[2].filename = path .. "pumpjack-horsehead-shadow.png"
-                    --[[
-                    if anim.layers[1].hr_version then
-                        anim.layers[1].hr_version.filename = path .. "hr-horsehead_mk" .. tier .. ".png"
+    -- =============================================
+    -- FACTORIO 2.x : les sprites sont dans graphics_set
+    -- =============================================
+    if entity.graphics_set then
+
+        -- Base picture (le socle fixe)
+        local base = entity.graphics_set.base_picture
+        if base and base.layers then
+            log("  [2.x] Replacing base_picture layers")
+            base.layers[1].filename = path .. "pumpjack-base.png"
+            base.layers[2].filename = path .. "pumpjack-base-shadow.png"
+        elseif base then
+            log("  [2.x] Replacing base_picture (no layers)")
+            base.filename = path .. "pumpjack-base.png"
+        else
+            log("  [2.x] WARNING: graphics_set.base_picture not found")
+        end
+
+        -- Working visualisations (le horsehead qui bouge)
+        local working = entity.graphics_set.working_visualisations
+        if working then
+            for idx, vis in pairs(working) do
+                if vis.animation then
+                    local anim = vis.animation
+                    log("  [2.x] Replacing working_visualisation[" .. tostring(idx) .. "] animation")
+                    if anim.layers then
+                        anim.layers[1].filename = path .. "horsehead_mk" .. tier .. ".png"
+                        anim.layers[2].filename = path .. "pumpjack-horsehead-shadow.png"
+                    else
+                        anim.filename = path .. "horsehead_mk" .. tier .. ".png"
                     end
-                    if anim.layers[2].hr_version then
-                        anim.layers[2].hr_version.filename = path .. "hr-pumpjack-horsehead-shadow.png"
+                end
+            end
+        else
+            log("  [2.x] WARNING: graphics_set.working_visualisations not found")
+        end
+
+    -- =============================================
+    -- FALLBACK FACTORIO 1.x
+    -- =============================================
+    else
+        log("  [1.x fallback] Using base_picture + working_visualisations")
+
+        -- Base picture
+        if entity.base_picture and entity.base_picture.layers then
+            entity.base_picture.layers[1].filename = path .. "pumpjack-base.png"
+            entity.base_picture.layers[2].filename = path .. "pumpjack-base-shadow.png"
+            --[[
+            if entity.base_picture.layers[1].hr_version then
+                entity.base_picture.layers[1].hr_version.filename = path .. "hr-pumpjack-base.png"
+            end
+            if entity.base_picture.layers[2].hr_version then
+                entity.base_picture.layers[2].hr_version.filename = path .. "hr-pumpjack-base-shadow.png"
+            end
+            --]]
+        end
+
+        -- Working visualisations
+        if entity.working_visualisations then
+            for _, vis in pairs(entity.working_visualisations) do
+                if vis.animation then
+                    local anim = vis.animation
+                    if anim.layers then
+                        anim.layers[1].filename = path .. "horsehead_mk" .. tier .. ".png"
+                        anim.layers[2].filename = path .. "pumpjack-horsehead-shadow.png"
+                        --[[
+                        if anim.layers[1].hr_version then
+                            anim.layers[1].hr_version.filename = path .. "hr-horsehead_mk" .. tier .. ".png"
+                        end
+                        if anim.layers[2].hr_version then
+                            anim.layers[2].hr_version.filename = path .. "hr-pumpjack-horsehead-shadow.png"
+                        end
+                        --]]
+                    else
+                        anim.filename = path .. "horsehead_mk" .. tier .. ".png"
+                        --[[
+                        if anim.hr_version then
+                            anim.hr_version.filename = path .. "hr-horsehead_mk" .. tier .. ".png"
+                        end
+                        --]]
                     end
-                    --]]
-                else
-                    anim.filename = path .. "horsehead_mk" .. tier .. ".png"
-                    --[[
-                    if anim.hr_version then
-                        anim.hr_version.filename = path .. "hr-horsehead_mk" .. tier .. ".png"
-                    end
-                    --]]
                 end
             end
         end
@@ -134,6 +185,9 @@ for i = 1, tier_count do
     apply_pumpjack_sprites(entity, tier)
     entity.corpse = "remnants_mk" .. tier
 
+    log("Advanced Pumpjacks: entity prototype [" .. name .. "]:")
+    log(serpent.block(entity))
+
     ----------------------------------------
     -- ITEM
     ----------------------------------------
@@ -148,6 +202,9 @@ for i = 1, tier_count do
     }
     item.icon = nil
 
+    log("Advanced Pumpjacks: item prototype [" .. name .. "]:")
+    log(serpent.block(item))
+
     ----------------------------------------
     -- RECIPE
     ----------------------------------------
@@ -160,6 +217,9 @@ for i = 1, tier_count do
         {type="item", name="steel-plate", amount=5 * i},
         {type="item", name="advanced-circuit", amount=3 * i}
     }
+
+    log("Advanced Pumpjacks: recipe prototype [" .. name .. "]:")
+    log(serpent.block(recipe))
 
     ----------------------------------------
     -- TECHNOLOGY
@@ -187,6 +247,9 @@ for i = 1, tier_count do
         order = "d-a-" .. i
     }
 
+    log("Advanced Pumpjacks: technology prototype [" .. name .. "]:")
+    log(serpent.block(tech))
+
     ----------------------------------------
     -- CORPSE
     ----------------------------------------
@@ -194,7 +257,7 @@ for i = 1, tier_count do
     local corpse = {
         type = "corpse",
         name = "remnants_mk" .. tier,
-        --icon =""
+        icons = item.icons,
         flags = {"placeable-neutral", "building-direction-8-way", "not-on-map"},
         hidden_in_factoriopedia = true,
         subgroup = "extraction-machine-remnants",
@@ -213,7 +276,7 @@ for i = 1, tier_count do
             width = 274,
             height = 284,
             direction_count = 1,
-            shift = util.by_pixel(0, 3.5)
+            shift = util.by_pixel(0, 3.5),
             scale = 0.5
             --HR not supported yet
             --[[
@@ -231,12 +294,12 @@ for i = 1, tier_count do
         }
     }
 
+    log("Advanced Pumpjacks: corpse prototype [remnants_mk" .. tier .. "]:")
+    log(serpent.block(corpse))
+
     ----------------------------------------
     -- REGISTER
     ----------------------------------------
 
     data:extend({entity, item, recipe, tech, corpse})
 end
-
-
-
