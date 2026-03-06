@@ -18,7 +18,7 @@ local tier_count = math.min(requested_tiers, max_allowed)
 local base_pumpjack = data.raw["mining-drill"]["pumpjack"]
 local base_item = data.raw["item"]["pumpjack"]
 local base_recipe = data.raw["recipe"]["pumpjack"]
-local base_corpse = data.raw["remnants"]["pumpjack-remnants"]
+--local base_corpse = data.raw["remnants"]["pumpjack-remnants"]
 
 --------------------------------------------------
 -- COLOR FOR ITEMS ONLY
@@ -40,52 +40,37 @@ end
 -- APPLY CUSTOM SPRITES
 --------------------------------------------------
 
+--[[
 local function apply_pumpjack_sprites(entity, tier)
     local path = "__advanced-pumpjacks__/graphics/mk" .. tier .. "/"
+    local shared_path = "__advanced-pumpjacks__/graphics/"
 
-    -- Base picture
-    if entity.base_picture and entity.base_picture.layers then
-        entity.base_picture.layers[1].filename = path .. "pumpjack-base.png"
-        entity.base_picture.layers[2].filename = path .. "pumpjack-base-shadow.png"
-        --[[
-        if entity.base_picture.layers[1].hr_version then
-            entity.base_picture.layers[1].hr_version.filename = path .. "hr-pumpjack-base.png"
-        end
-        if entity.base_picture.layers[2].hr_version then
-            entity.base_picture.layers[2].hr_version.filename = path .. "hr-pumpjack-base-shadow.png"
-        end
-        --]]
-    end
-
-    -- Working visualisations
-    if entity.working_visualisations then
-        for _, vis in pairs(entity.working_visualisations) do
-            if vis.animation then
-                local anim = vis.animation
-                if anim.layers then
-                    anim.layers[1].filename = path .. "horsehead_mk" .. tier .. ".png"
-                    anim.layers[2].filename = path .. "pumpjack-horsehead-shadow.png"
-                    --[[
-                    if anim.layers[1].hr_version then
-                        anim.layers[1].hr_version.filename = path .. "hr-horsehead_mk" .. tier .. ".png"
-                    end
-                    if anim.layers[2].hr_version then
-                        anim.layers[2].hr_version.filename = path .. "hr-pumpjack-horsehead-shadow.png"
-                    end
-                    --]]
-                else
-                    anim.filename = path .. "horsehead_mk" .. tier .. ".png"
-                    --[[
-                    if anim.hr_version then
-                        anim.hr_version.filename = path .. "hr-horsehead_mk" .. tier .. ".png"
-                    end
-                    --]]
-                end
+    -- HORSEHEAD uniquement : dans graphics_set.animation par direction
+    if entity.graphics_set and entity.graphics_set.animation then
+        local directions = {"north", "east", "south", "west"}
+        for _, dir in pairs(directions) do
+            local anim = entity.graphics_set.animation[dir]
+            if anim and anim.layers then
+                anim.layers[1].filename = path .. "horsehead_mk" .. tier .. ".png" 
+                anim.layers[1].blend_mode = "additive"
             end
         end
     end
 end
+--]]
+local function apply_pumpjack_sprites(entity, tier)
+    local tint = get_tier_tint(tier - 1)  -- tier-1 car get_tier_tint commence à l'index 1
 
+    if entity.graphics_set and entity.graphics_set.animation then
+        local directions = {"north", "east", "south", "west"}
+        for _, dir in pairs(directions) do
+            local anim = entity.graphics_set.animation[dir]
+            if anim and anim.layers then
+                anim.layers[1].tint = tint
+            end
+        end
+    end
+end
 --------------------------------------------------
 -- GENERATE TIERS
 --------------------------------------------------
@@ -134,6 +119,9 @@ for i = 1, tier_count do
     apply_pumpjack_sprites(entity, tier)
     entity.corpse = "remnants_mk" .. tier
 
+    log("Advanced Pumpjacks: entity prototype [" .. name .. "]:")
+    log(serpent.block(entity))
+
     ----------------------------------------
     -- ITEM
     ----------------------------------------
@@ -148,6 +136,9 @@ for i = 1, tier_count do
     }
     item.icon = nil
 
+    log("Advanced Pumpjacks: item prototype [" .. name .. "]:")
+    log(serpent.block(item))
+
     ----------------------------------------
     -- RECIPE
     ----------------------------------------
@@ -160,6 +151,9 @@ for i = 1, tier_count do
         {type="item", name="steel-plate", amount=5 * i},
         {type="item", name="advanced-circuit", amount=3 * i}
     }
+
+    log("Advanced Pumpjacks: recipe prototype [" .. name .. "]:")
+    log(serpent.block(recipe))
 
     ----------------------------------------
     -- TECHNOLOGY
@@ -187,6 +181,9 @@ for i = 1, tier_count do
         order = "d-a-" .. i
     }
 
+    log("Advanced Pumpjacks: technology prototype [" .. name .. "]:")
+    log(serpent.block(tech))
+
     ----------------------------------------
     -- CORPSE
     ----------------------------------------
@@ -194,7 +191,7 @@ for i = 1, tier_count do
     local corpse = {
         type = "corpse",
         name = "remnants_mk" .. tier,
-        --icon =""
+        icons = item.icons,
         flags = {"placeable-neutral", "building-direction-8-way", "not-on-map"},
         hidden_in_factoriopedia = true,
         subgroup = "extraction-machine-remnants",
@@ -213,8 +210,9 @@ for i = 1, tier_count do
             width = 274,
             height = 284,
             direction_count = 1,
-            shift = util.by_pixel(0, 3.5)
-            scale = 0.5
+            shift = util.by_pixel(0, 3.5),
+            scale = 0.5,
+            tint = tint,
             --HR not supported yet
             --[[
             hr_version = {
@@ -231,12 +229,12 @@ for i = 1, tier_count do
         }
     }
 
+    log("Advanced Pumpjacks: corpse prototype [remnants_mk" .. tier .. "]:")
+    log(serpent.block(corpse))
+
     ----------------------------------------
     -- REGISTER
     ----------------------------------------
 
     data:extend({entity, item, recipe, tech, corpse})
 end
-
-
-

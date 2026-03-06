@@ -1,6 +1,6 @@
 {
   "name": "advanced-pumpjacks",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "title": "Advanced Pumpjacks",
   "description": "Adds advanced pumpjacks that can extract more resources from oil fields.",
   "author": "Appalings03",
@@ -11,6 +11,7 @@
     "? space-age"
   ]
 }
+
 
 
 
