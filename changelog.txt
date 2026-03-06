@@ -7,6 +7,7 @@ Date: 06.03.2026
   Changes:
     - Added debug logging via serpent.block for all generated prototypes (entity, item, recipe,
       technology, corpse) to help diagnose sprite issues
+
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.1
 Date: 05.0.3.2026
