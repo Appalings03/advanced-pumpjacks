@@ -38,105 +38,39 @@ end
 
 --------------------------------------------------
 -- APPLY CUSTOM SPRITES
--- FIX: Factorio 2.x utilise graphics_set au lieu de
---      base_picture + working_visualisations directement
 --------------------------------------------------
 
+--[[
 local function apply_pumpjack_sprites(entity, tier)
     local path = "__advanced-pumpjacks__/graphics/mk" .. tier .. "/"
+    local shared_path = "__advanced-pumpjacks__/graphics/"
 
-    log("Advanced Pumpjacks [apply_pumpjack_sprites] tier=" .. tier)
-    log("  graphics_set exists: " .. tostring(entity.graphics_set ~= nil))
-    log("  base_picture exists: " .. tostring(entity.base_picture ~= nil))
-    log("  working_visualisations exists: " .. tostring(entity.working_visualisations ~= nil))
-
-    -- =============================================
-    -- FACTORIO 2.x : les sprites sont dans graphics_set
-    -- =============================================
-    if entity.graphics_set then
-
-        -- Base picture (le socle fixe)
-        local base = entity.graphics_set.base_picture
-        if base and base.layers then
-            log("  [2.x] Replacing base_picture layers")
-            base.layers[1].filename = path .. "pumpjack-base.png"
-            base.layers[2].filename = path .. "pumpjack-base-shadow.png"
-        elseif base then
-            log("  [2.x] Replacing base_picture (no layers)")
-            base.filename = path .. "pumpjack-base.png"
-        else
-            log("  [2.x] WARNING: graphics_set.base_picture not found")
-        end
-
-        -- Working visualisations (le horsehead qui bouge)
-        local working = entity.graphics_set.working_visualisations
-        if working then
-            for idx, vis in pairs(working) do
-                if vis.animation then
-                    local anim = vis.animation
-                    log("  [2.x] Replacing working_visualisation[" .. tostring(idx) .. "] animation")
-                    if anim.layers then
-                        anim.layers[1].filename = path .. "horsehead_mk" .. tier .. ".png"
-                        anim.layers[2].filename = path .. "pumpjack-horsehead-shadow.png"
-                    else
-                        anim.filename = path .. "horsehead_mk" .. tier .. ".png"
-                    end
-                end
-            end
-        else
-            log("  [2.x] WARNING: graphics_set.working_visualisations not found")
-        end
-
-    -- =============================================
-    -- FALLBACK FACTORIO 1.x
-    -- =============================================
-    else
-        log("  [1.x fallback] Using base_picture + working_visualisations")
-
-        -- Base picture
-        if entity.base_picture and entity.base_picture.layers then
-            entity.base_picture.layers[1].filename = path .. "pumpjack-base.png"
-            entity.base_picture.layers[2].filename = path .. "pumpjack-base-shadow.png"
-            --[[
-            if entity.base_picture.layers[1].hr_version then
-                entity.base_picture.layers[1].hr_version.filename = path .. "hr-pumpjack-base.png"
-            end
-            if entity.base_picture.layers[2].hr_version then
-                entity.base_picture.layers[2].hr_version.filename = path .. "hr-pumpjack-base-shadow.png"
-            end
-            --]]
-        end
-
-        -- Working visualisations
-        if entity.working_visualisations then
-            for _, vis in pairs(entity.working_visualisations) do
-                if vis.animation then
-                    local anim = vis.animation
-                    if anim.layers then
-                        anim.layers[1].filename = path .. "horsehead_mk" .. tier .. ".png"
-                        anim.layers[2].filename = path .. "pumpjack-horsehead-shadow.png"
-                        --[[
-                        if anim.layers[1].hr_version then
-                            anim.layers[1].hr_version.filename = path .. "hr-horsehead_mk" .. tier .. ".png"
-                        end
-                        if anim.layers[2].hr_version then
-                            anim.layers[2].hr_version.filename = path .. "hr-pumpjack-horsehead-shadow.png"
-                        end
-                        --]]
-                    else
-                        anim.filename = path .. "horsehead_mk" .. tier .. ".png"
-                        --[[
-                        if anim.hr_version then
-                            anim.hr_version.filename = path .. "hr-horsehead_mk" .. tier .. ".png"
-                        end
-                        --]]
-                    end
-                end
+    -- HORSEHEAD uniquement : dans graphics_set.animation par direction
+    if entity.graphics_set and entity.graphics_set.animation then
+        local directions = {"north", "east", "south", "west"}
+        for _, dir in pairs(directions) do
+            local anim = entity.graphics_set.animation[dir]
+            if anim and anim.layers then
+                anim.layers[1].filename = path .. "horsehead_mk" .. tier .. ".png" 
+                anim.layers[1].blend_mode = "additive"
             end
         end
     end
 end
+--]]
+local function apply_pumpjack_sprites(entity, tier)
+    local tint = get_tier_tint(tier - 1)  -- tier-1 car get_tier_tint commence à l'index 1
 
+    if entity.graphics_set and entity.graphics_set.animation then
+        local directions = {"north", "east", "south", "west"}
+        for _, dir in pairs(directions) do
+            local anim = entity.graphics_set.animation[dir]
+            if anim and anim.layers then
+                anim.layers[1].tint = tint
+            end
+        end
+    end
+end
 --------------------------------------------------
 -- GENERATE TIERS
 --------------------------------------------------
@@ -277,7 +211,8 @@ for i = 1, tier_count do
             height = 284,
             direction_count = 1,
             shift = util.by_pixel(0, 3.5),
-            scale = 0.5
+            scale = 0.5,
+            tint = tint,
             --HR not supported yet
             --[[
             hr_version = {
