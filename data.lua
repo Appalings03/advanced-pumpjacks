@@ -188,14 +188,45 @@ for i = 1, tier_count do
     -- CORPSE
     ----------------------------------------
 
-    local corpse = table.deepcopy(base_corpse)
-    corpse.name = "remnants_mk" .. tier
-    corpse.icons = item.icons
-    for _, anim in pairs(corpse.animation) do
-        if type(anim) == "table" then
-            anim.tint = tint
-        end
-    end
+    local corpse = {
+        type = "corpse",
+        name = "remnants_mk" .. tier,
+        icons = item.icons,
+        flags = {"placeable-neutral", "building-direction-8-way", "not-on-map"},
+        hidden_in_factoriopedia = true,
+        subgroup = "extraction-machine-remnants",
+        order = "a-d-a",
+        selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
+        tile_width = 3,
+        tile_height = 3,
+        selectable_in_game = false,
+        time_before_removed = 60 * 60 * 15,
+        expires = false,
+        final_render_layer = "remnants",
+        remove_on_tile_placement = false,
+        animation = {
+            filename = "__advanced-pumpjacks__/graphics/mk" .. tier .. "/remnants_mk" .. tier .. ".png",
+            line_length = 1,
+            width = 274,
+            height = 284,
+            direction_count = 1,
+            shift = util.by_pixel(0, 3.5),
+            scale = 0.5
+            --HR not supported yet
+            --[[
+            hr_version = {
+                filename = "__advanced-pumpjacks__/graphics/mk" .. tier .. "/hr-remnants_mk" .. tier .. ".png",
+                line_length = 1,
+                width = 292,
+                height = 264,
+                frame_count = 1,
+                direction_count = 4,
+                shift = {0.8125, 0.5625},
+                scale = 0.5
+            }
+          --]]
+        }
+    }
     log("Advanced Pumpjacks: corpse prototype [remnants_mk" .. tier .. "]:")
     log(serpent.block(corpse))
 
@@ -205,5 +236,6 @@ for i = 1, tier_count do
 
     data:extend({entity, item, recipe, tech, corpse})
 end
+
 
 
