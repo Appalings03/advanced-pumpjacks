@@ -62,7 +62,8 @@ if mods["space-age"] then
         }
         data.raw.technology["pumpjack-mk2"].prerequisites = {
             "oil-processing",
-            "chemical-science-pack"
+            "chemical-science-pack",
+            "production-science-pack"
         }
     end
     --------------------------------------------------
