@@ -1,4 +1,14 @@
 # TODO
-## Corriger le cfg -> Done
 ## Modifier la technologie pour inclure les bonnes prerequisites -> Done
-## Cacher les recettes pour les foundry de l'inventaire
+
+### Todo
+- [ ] Nothing for now
+
+### In Progress
+
+- [ ] Hide Foundry recipe from inventory 
+
+### Done ✓
+
+- [x] Modify the cfg file for the new name
+- [x] Modify the tech prerequisite for mk2 when Space Age is there
