@@ -119,8 +119,8 @@ for i = 1, tier_count do
     apply_pumpjack_sprites(entity, tier)
     entity.corpse = "remnants_mk" .. tier
 
-    log("Advanced Pumpjacks: entity prototype [" .. name .. "]:")
-    log(serpent.block(entity))
+    -- log("Advanced Pumpjacks: entity prototype [" .. name .. "]:")
+    -- log(serpent.block(entity))
 
     ----------------------------------------
     -- ITEM
@@ -136,8 +136,8 @@ for i = 1, tier_count do
     }
     item.icon = nil
 
-    log("Advanced Pumpjacks: item prototype [" .. name .. "]:")
-    log(serpent.block(item))
+    -- log("Advanced Pumpjacks: item prototype [" .. name .. "]:")
+    -- log(serpent.block(item))
 
     ----------------------------------------
     -- RECIPE
@@ -152,8 +152,8 @@ for i = 1, tier_count do
         {type="item", name="advanced-circuit", amount=3 * i}
     }
 
-    log("Advanced Pumpjacks: recipe prototype [" .. name .. "]:")
-    log(serpent.block(recipe))
+    -- log("Advanced Pumpjacks: recipe prototype [" .. name .. "]:")
+    -- log(serpent.block(recipe))
 
     ----------------------------------------
     -- TECHNOLOGY
@@ -181,8 +181,8 @@ for i = 1, tier_count do
         order = "d-a-" .. i
     }
 
-    log("Advanced Pumpjacks: technology prototype [" .. name .. "]:")
-    log(serpent.block(tech))
+    -- log("Advanced Pumpjacks: technology prototype [" .. name .. "]:")
+    -- log(serpent.block(tech))
 
     ----------------------------------------
     -- CORPSE
@@ -227,8 +227,8 @@ for i = 1, tier_count do
           --]]
         }
     }
-    log("Advanced Pumpjacks: corpse prototype [remnants_mk" .. tier .. "]:")
-    log(serpent.block(corpse))
+    -- log("Advanced Pumpjacks: corpse prototype [remnants_mk" .. tier .. "]:")
+    -- log(serpent.block(corpse))
 
     ----------------------------------------
     -- REGISTER
@@ -236,6 +236,7 @@ for i = 1, tier_count do
 
     data:extend({entity, item, recipe, tech, corpse})
 end
+
 
 
 

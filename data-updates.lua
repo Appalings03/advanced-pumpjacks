@@ -62,7 +62,8 @@ if mods["space-age"] then
         }
         data.raw.technology["pumpjack-mk2"].prerequisites = {
             "oil-processing",
-            "chemical-science-pack"
+            "chemical-science-pack",
+            "production-science-pack"
         }
     end
     --------------------------------------------------
@@ -140,7 +141,7 @@ if mods["space-age"] then
         local r = data.raw.recipe["pumpjack-mk3"]
     
         r.enabled = false
-        r.category = "crafting"
+        r.category = "metallurgy-or-assembling"
         r.energy_required = 8
         r.ingredients = {
             {type="item", name="pumpjack-mk2", amount=1},
@@ -153,6 +154,7 @@ if mods["space-age"] then
     end
     
     -- MK3 (Foundry version)
+    --[[
     if data.raw.recipe["pumpjack-mk3"] then
         local foundry = table.deepcopy(data.raw.recipe["pumpjack-mk3"])
         foundry.name = "pumpjack-mk3-foundry"
@@ -164,15 +166,15 @@ if mods["space-age"] then
     
         add_unlock("pumpjack-mk3", "pumpjack-mk3-foundry")
     end
-    
+    --]]
     
     -- MK4 (Assembler version)
     if data.raw.recipe["pumpjack-mk4"] then
         local r = data.raw.recipe["pumpjack-mk4"]
     
         r.enabled = false
-        r.category = "crafting-with-fluid"
-        r.energy_required = 12
+        r.category = "cryogenics-or-assembling"
+        r.energy_required = 9
         r.ingredients = {
             {type="item", name="pumpjack-mk3", amount=1},
             {type="item", name="processing-unit", amount=25},
@@ -185,6 +187,7 @@ if mods["space-age"] then
     end
     
     -- MK4 (Cryogenic version)
+    --[[
     if data.raw.recipe["pumpjack-mk4"] then
         local cryo = table.deepcopy(data.raw.recipe["pumpjack-mk4"])
         cryo.name = "pumpjack-mk4-cryogenic"
@@ -196,7 +199,7 @@ if mods["space-age"] then
     
         add_unlock("pumpjack-mk4", "pumpjack-mk4-cryogenic")
     end
-    
+    --]]
     log("Advanced Pumpjacks: Space Age recipes upgraded.")
     --------------------------------------------------
     -- MK2 STATS
