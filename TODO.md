@@ -2,7 +2,8 @@
 ## Modifier la technologie pour inclure les bonnes prerequisites -> Done
 
 ### Todo
-- [ ] Nothing for now
+- [ ] Add crafting condition for the mk3 when Space Age is activated -> only Vulcanus
+- [ ] Add crafting condition for the mk4 when Space Age is activated -> only Aquilo
 
 ### In Progress
 
