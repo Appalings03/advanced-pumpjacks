@@ -7,7 +7,7 @@
   "homepage": "https://github.com/Appalings03/advanced-pumpjacks",
   "factorio_version": "2.1",
   "dependencies": [
-    "base >= 2.1",
+    "base >= 2.0",
     "? space-age"
   ]
 }
