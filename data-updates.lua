@@ -1,3 +1,9 @@
+local base = data.raw["mining-drill"]["pumpjack"]
+if base then
+    base.fast_replaceable_group = "pumpjack"
+    base.next_upgrade = "pumpjack-mk2"
+end
+
 local function add_unlock(tech_name, recipe_name)
     local tech = data.raw.technology[tech_name]
     if tech then
@@ -149,6 +155,10 @@ if mods["space-age"] then
             {type="item", name="advanced-circuit", amount=20},
             {type="item", name="electric-engine-unit", amount=10}
         }
+        r.surface_conditions = {
+            { property = "surface", value = "vulcanus" }
+        }
+
     
         add_unlock("pumpjack-mk3", "pumpjack-mk3")
     end
@@ -182,6 +192,10 @@ if mods["space-age"] then
             {type="item", name="electric-engine-unit", amount=20},
             {type="fluid", name="fluoroketone-hot", amount=25}
         }
+        r.surface_conditions = {
+            { property = "surface", value = "aquilo" }
+        }
+
     
         add_unlock("pumpjack-mk4", "pumpjack-mk4")
     end
