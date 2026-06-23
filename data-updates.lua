@@ -1,3 +1,9 @@
+local base = data.raw["mining-drill"]["pumpjack"]
+if base then
+    base.fast_replaceable_group = "pumpjack"
+    base.next_upgrade = "pumpjack-mk2"
+end
+
 local function add_unlock(tech_name, recipe_name)
     local tech = data.raw.technology[tech_name]
     if tech then
