@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.2
+Date: 23.06.2026
+  Bugfixes:
+    - Added the base pumpjack to mk2 for upgrade planner
+  Changes:
+    - Changes the settings from 10 to 7(real max)
+    - Added crafting conditions per planets for mk3 and mk4 (Vulcanus and Aquilo)
+
+---------------------------------------------------------------------------------------------------
 Version: 1.3.1
 Date: 15.03.2026
   Bugfixes:
