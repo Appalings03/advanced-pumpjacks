@@ -130,7 +130,7 @@ if mods["space-age"] then
         local r = data.raw.recipe["pumpjack-mk2"]
     
         r.enabled = false
-        r.category = "crafting"
+        r.categories = {"crafting"}
         r.energy_required = 5
         r.ingredients = {
             {type="item", name="pumpjack", amount=2},
@@ -147,7 +147,7 @@ if mods["space-age"] then
         local r = data.raw.recipe["pumpjack-mk3"]
     
         r.enabled = false
-        r.category = "metallurgy-or-assembling"
+        r.categories = {"metallurgy", "crafting"}
         r.energy_required = 8
         r.ingredients = {
             {type="item", name="pumpjack-mk2", amount=1},
@@ -182,7 +182,7 @@ if mods["space-age"] then
         local r = data.raw.recipe["pumpjack-mk4"]
     
         r.enabled = false
-        r.category = "cryogenics-or-assembling"
+        r.categories = {"cryogenics", "crafting-with-fluid"}
         r.energy_required = 9
         r.ingredients = {
             {type="item", name="pumpjack-mk3", amount=1},
@@ -253,4 +253,3 @@ if mods["space-age"] then
 
     log("Advanced Pumpjacks: Space Age stats rebalanced.")
 end
-
