@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.4.1
+Date: 2026-06-24
+  Changes:
+    - Updated for Factorio 2.1.7: recipe category -> categories (array format)
+    - MK3 recipe now accepts metallurgy and crafting categories
+    - MK4 recipe now accepts cryogenics and crafting-with-fluid categories
+
+---------------------------------------------------------------------------------------------------
 Version: 1.4.0
 Date: 23.06.2026
   Changes:
