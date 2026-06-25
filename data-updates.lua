@@ -156,7 +156,7 @@ if mods["space-age"] then
             {type="item", name="electric-engine-unit", amount=10}
         }
         r.surface_conditions = {
-            { property = "surface", value = "vulcanus" }
+            { property = "pressure", min = 4000 , max = 4000}
         }
 
     
@@ -193,7 +193,7 @@ if mods["space-age"] then
             {type="fluid", name="fluoroketone-hot", amount=25}
         }
         r.surface_conditions = {
-            { property = "surface", value = "aquilo" }
+            { property = "pressure", min = 300, max =300 }
         }
 
     
