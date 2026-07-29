@@ -192,7 +192,7 @@ if mods["space-age"] then
             {type="fluid", name="fluoroketone-hot", amount=25}
         }
         r.surface_conditions = {
-            { property = "temperature", min=-10}
+                        { property = "pressure", min = 300, max =300 }
         }
 
         add_unlock("pumpjack-mk4", "pumpjack-mk4")
