@@ -156,8 +156,8 @@ if mods["space-age"] then
             {type="item", name="electric-engine-unit", amount=10}
         }
         r.surface_conditions = {
-            { property = "surface", value = "vulcanus" }
-        }
+  { property = "pressure", min = 4000, max=4000 }
+}
 
         add_unlock("pumpjack-mk3", "pumpjack-mk3")
     end
@@ -192,7 +192,7 @@ if mods["space-age"] then
             {type="fluid", name="fluoroketone-hot", amount=25}
         }
         r.surface_conditions = {
-            { property = "surface", value = "aquilo" }
+            { property = "temperature", min=-10}
         }
 
         add_unlock("pumpjack-mk4", "pumpjack-mk4")
